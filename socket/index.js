@@ -68,7 +68,7 @@ module.exports = (io) => {
     })
 
     socket.on ('joinRoom', data => {
-      var { roomID, group } = data
+      var roomID = data.roomID, group = data.group
       var room = rooms[roomID]
       if (room === undefined) {
         socket.emit ('message', 'Room Not Found')
