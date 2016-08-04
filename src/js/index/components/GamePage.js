@@ -33,7 +33,6 @@ var getScore = done => {
 
 export default class GamePage extends React.Component {
 	componentWillUnmount () {
-		socket.emit ('leaveRoom');
 		socket.disconnect ();
 	}
 

@@ -133,7 +133,7 @@ module.exports = (io) => {
           users[player].socket.emit ('leaveGame')
           delete users[player]
         })
-        users[socket.id].socket.emit ('leaveGame')
+        socket.emit ('leaveGame')
         delete users[socket.id]
         delete rooms[roomID]
       } else {
@@ -149,20 +149,43 @@ module.exports = (io) => {
         }
       }
     })
+
+    socket.on ('disconnect', () => {
+      var roomID = users[socket.id].roomID
+      var room = rooms[roomID]
+
+      if (room === undefined) {
+        delete users[socket.id]
+      } else if (room.host === socket.id) {
+        room.players.forEach (player => {
+          users[player].socket.emit ('leaveGame')
+          delete users[player]
+        })
+        delete users[socket.id]
+        delete rooms[roomID]
+      } else {
+        var players = room.players
+        players.splice (players.indexOf (socket.id), 1)
+
+        delete users[socket.id]
+        if (players.length === 0) {
+          users[room.host].socket.emit ('leaveGame')
+          delete users[room.host]
+          delete rooms[roomID]
+        }
+      }
+    })
   })
 
   io.of ('/scoreboard').on ('connection', socket => {
     socket.on ('getScore', group => {
       socket.emit ('getScore', getScore (group))
-      var id = setInterval (() => socket.emit ('getScore', getScore (group)), 1000)
-      scoreboard[socket.id] = id
+      scoreboard[socket.id] = setInterval (() => socket.emit ('getScore', getScore (group)), 1000)
     })
 
     socket.on ('disconnect', () => {
-      if (scoreboard[socket.id] !== undefined) {
-        clearInterval (scoreboard[socket.id])
-        delete scoreboard[socket.id]
-      }
+      clearInterval (scoreboard[socket.id])
+      delete scoreboard[socket.id]
     })
   })
 }
