@@ -151,27 +151,29 @@ module.exports = (io) => {
     })
 
     socket.on ('disconnect', () => {
-      var roomID = users[socket.id].roomID
-      var room = rooms[roomID]
+      if (users[socket.id] !== undefined) {
+        var roomID = users[socket.id].roomID
+        var room = rooms[roomID]
 
-      if (room === undefined) {
-        delete users[socket.id]
-      } else if (room.host === socket.id) {
-        room.players.forEach (player => {
-          users[player].socket.emit ('leaveGame')
-          delete users[player]
-        })
-        delete users[socket.id]
-        delete rooms[roomID]
-      } else {
-        var players = room.players
-        players.splice (players.indexOf (socket.id), 1)
-
-        delete users[socket.id]
-        if (players.length === 0) {
-          users[room.host].socket.emit ('leaveGame')
-          delete users[room.host]
+        if (room === undefined) {
+          delete users[socket.id]
+        } else if (room.host === socket.id) {
+          room.players.forEach (player => {
+            users[player].socket.emit ('leaveGame')
+            delete users[player]
+          })
+          delete users[socket.id]
           delete rooms[roomID]
+        } else {
+          var players = room.players
+          players.splice (players.indexOf (socket.id), 1)
+
+          delete users[socket.id]
+          if (players.length === 0) {
+            users[room.host].socket.emit ('leaveGame')
+            delete users[room.host]
+            delete rooms[roomID]
+          }
         }
       }
     })
