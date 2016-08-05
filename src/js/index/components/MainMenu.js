@@ -29,7 +29,7 @@ export default class MainMenu extends React.Component {
 			renderPage =
 				<ModePage
 					isBack={ false }
-					onBack={ () => {} }
+					onBack={ this.props.onLogout }
 					mode={ 'Vocabulary' }
 					username={ this.props.username }
 					onChangeMode={ this.onChangeMode }

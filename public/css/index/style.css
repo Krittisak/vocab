@@ -115,6 +115,14 @@ html, body, #container {
   font-size: 18px;
 }
 
+.buttonLogout {
+  float: right;
+  font-size: 18px;
+  color: rgb(17, 63, 122);
+  background: transparent;
+  border: none;
+}
+
 /* ModePage & MenuPage */
 
 .selectPage {
