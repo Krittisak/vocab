@@ -93,59 +93,75 @@ module.exports = (io) => {
     })
 
     socket.on ('sendWord', word => {
-      var room = rooms[users[socket.id].roomID]
-      if (room === undefined) {
+      if (users[socket.id] === undefined) {
         socket.disconnect ()
       } else {
-        room.players.forEach (id => users[id].socket.emit ('sendWord', word))
+        var room = rooms[users[socket.id].roomID]
+        if (room === undefined) {
+          socket.disconnect ()
+        } else {
+          room.players.forEach (id => users[id].socket.emit ('sendWord', word))
+        }
       }
     })
 
     socket.on ('checkWord', data => {
-      var room = rooms[users[socket.id].roomID]
-      if (room === undefined) {
+      if (users[socket.id] === undefined) {
         socket.disconnect ()
       } else {
-        users[room.host].socket.emit ('checkWord', data)
+        var room = rooms[users[socket.id].roomID]
+        if (room === undefined) {
+          socket.disconnect ()
+        } else {
+          users[room.host].socket.emit ('checkWord', data)
+        }
       }
     })
 
     socket.on ('sendScore', score => {
-      var room = rooms[users[socket.id].roomID]
-      if (room === undefined) {
+      if (users[socket.id] === undefined) {
         socket.disconnect ()
       } else {
-        room.score = score;
-        room.time = new Date ().getTime ()
-        room.players.forEach (id => users[id].socket.emit ('sendScore', score))
+        var room = rooms[users[socket.id].roomID]
+        if (room === undefined) {
+          socket.disconnect ()
+        } else {
+          room.score = score;
+          room.time = new Date ().getTime ()
+          room.players.forEach (id => users[id].socket.emit ('sendScore', score))
+        }
       }
     })
 
     socket.on ('leaveRoom', () => {
-      var roomID = users[socket.id].roomID
-      var room = rooms[roomID]
-
-      if (room === undefined) {
-        delete users[socket.id]
+      if (users[socket.id] === undefined) {
         socket.disconnect ()
-      } else if (room.host === socket.id) {
-        room.players.forEach (player => {
-          users[player].socket.emit ('leaveGame')
-          delete users[player]
-        })
-        socket.emit ('leaveGame')
-        delete users[socket.id]
-        delete rooms[roomID]
       } else {
-        var players = room.players
-        players.splice (players.indexOf (socket.id), 1)
+        var roomID = users[socket.id].roomID
+        var room = rooms[roomID]
 
-        socket.emit ('leaveGame')
-        delete users[socket.id]
-        if (players.length === 0) {
-          users[room.host].socket.emit ('leaveGame')
-          delete users[room.host]
+        if (room === undefined) {
+          delete users[socket.id]
+          socket.disconnect ()
+        } else if (room.host === socket.id) {
+          room.players.forEach (player => {
+            users[player].socket.emit ('leaveGame')
+            delete users[player]
+          })
+          socket.emit ('leaveGame')
+          delete users[socket.id]
           delete rooms[roomID]
+        } else {
+          var players = room.players
+          players.splice (players.indexOf (socket.id), 1)
+
+          socket.emit ('leaveGame')
+          delete users[socket.id]
+          if (players.length === 0) {
+            users[room.host].socket.emit ('leaveGame')
+            delete users[room.host]
+            delete rooms[roomID]
+          }
         }
       }
     })
