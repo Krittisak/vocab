@@ -1,24 +1,39 @@
 import React from 'react';
+import request from 'superagent';
 import cookie from 'react-cookie';
 
 import LoginPage from './LoginPage';
 import MainMenu from './MainMenu';
 
 export default class App extends React.Component {
-	onLogin (username, vocab) {
-    cookie.save ('username', username, { path: '/' });
+	onLogin (username, code, vocab) {
+    cookie.save ('username', username);
+	  cookie.save ('code', code);
 		this.setState ({ username, vocab });
 	}
 
 	onLogout () {
-    cookie.remove ('username', { path: '/' });
+    cookie.remove ('username');
+	  cookie.remove ('vocab');
 		this.setState ({ username: undefined });
 	}
 
 	constructor (props) {
 		super (props);
 
-		this.state = { username: cookie.load ('username'), vocab: null };
+		var username = cookie.load ('username');
+		if (username !== undefined) {
+			var code = cookie.load ('code');
+			request
+				.get ('/data/' + code + '.json')
+				.end ((err, res) => {
+					if (!err) {
+						this.onLogin (username, code, res.body);
+					}
+				});
+		}
+
+		this.state = { username: null, vocab: null };
 
 		this.onLogin = this.onLogin.bind (this);
 		this.onLogout = this.onLogout.bind (this);
@@ -26,7 +41,7 @@ export default class App extends React.Component {
 
 	render () {
 		var renderPage;
-		if (this.state.username === undefined) {
+		if (this.state.username === null) {
 			renderPage = <LoginPage onLogin={ this.onLogin } />;
 		} else {
 			renderPage = <MainMenu onLogout={ this.onLogout } username={ this.state.username } vocab={ this.state.vocab } />

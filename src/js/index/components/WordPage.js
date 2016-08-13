@@ -1,6 +1,5 @@
 import React from 'react';
 import Slider from 'react-slick';
-import FlipCard from 'react-flipcard';
 
 import WordCard from './WordCard';
 

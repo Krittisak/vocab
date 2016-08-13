@@ -20,7 +20,7 @@ export default class LoginPage extends React.Component {
 					if (err) {
 						this.setState ({ message: 'Invalid Code' });
 					} else {
-						this.props.onLogin (username, res.body);
+						this.props.onLogin (username, code, res.body);
 					}
 				});
 		}
