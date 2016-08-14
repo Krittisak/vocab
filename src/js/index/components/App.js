@@ -15,7 +15,7 @@ export default class App extends React.Component {
 	onLogout () {
     cookie.remove ('username');
 	  cookie.remove ('vocab');
-		this.setState ({ username: undefined });
+		this.setState ({ username: null });
 	}
 
 	constructor (props) {
