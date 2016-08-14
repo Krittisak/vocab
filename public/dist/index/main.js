@@ -21561,7 +21561,7 @@
 			value: function onLogout() {
 				_reactCookie2.default.remove('username');
 				_reactCookie2.default.remove('vocab');
-				this.setState({ username: undefined });
+				this.setState({ username: null });
 			}
 		}]);
 
