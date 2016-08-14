@@ -1,4 +1,5 @@
 import React from 'react';
+import config from './config'
 
 import NavBar from './NavBar';
 
@@ -33,11 +34,11 @@ export default class CreatePage extends React.Component {
         />
         <div className="gameForm">
 					<div className="roomNumber">
-	          <div>Room</div>
+	          <div>{ config.s1 }</div>
 	          <div>{ this.props.roomID }</div>
 					</div>
           <form className="joinForm">
-            <div>Enter Room to Join</div>
+            <div>{ config.s2 }</div>
             <input className="roomID" ref="roomID" type="tel" />
 						<div>Group (optional)</div>
             <input className="roomID" ref="group" type="tel" placeholder="Default 0000" />
