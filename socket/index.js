@@ -75,6 +75,10 @@ module.exports = (io) => {
       } else if (roomID === users[socket.id].roomID) {
         socket.emit ('message', 'Not Your Room Number')
       } else {
+        if (room.players.length > 0) {
+          socket.emit ('message', 'Room is Full')
+          return ;
+        }
         if (room.group === null) {
           room.group = group
         }
@@ -129,6 +133,7 @@ module.exports = (io) => {
           room.score = score;
           room.time = new Date ().getTime ()
           room.players.forEach (id => users[id].socket.emit ('sendScore', score))
+          socket.emit ('sendScore', score)
         }
       }
     })
@@ -146,6 +151,7 @@ module.exports = (io) => {
         } else if (room.host === socket.id) {
           room.players.forEach (player => {
             users[player].socket.emit ('leaveGame')
+            users[player].socket.emit ('getOut')
             delete users[player]
           })
           socket.emit ('leaveGame')
@@ -159,6 +165,7 @@ module.exports = (io) => {
           delete users[socket.id]
           if (players.length === 0) {
             users[room.host].socket.emit ('leaveGame')
+            users[room.host].socket.emit ('getOut')
             delete users[room.host]
             delete rooms[roomID]
           }
@@ -176,6 +183,7 @@ module.exports = (io) => {
         } else if (room.host === socket.id) {
           room.players.forEach (player => {
             users[player].socket.emit ('leaveGame')
+            users[player].socket.emit ('getOut')
             delete users[player]
           })
           delete users[socket.id]
@@ -187,6 +195,7 @@ module.exports = (io) => {
           delete users[socket.id]
           if (players.length === 0) {
             users[room.host].socket.emit ('leaveGame')
+            users[room.host].socket.emit ('getOut')
             delete users[room.host]
             delete rooms[roomID]
           }

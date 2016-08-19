@@ -26350,6 +26350,7 @@
 
 			socket.on('leaveGame', function () {
 				_this.setState(reset);
+				_this.setState({ done: {} });
 				socket.emit('createRoom', _this.props.username);
 			});
 

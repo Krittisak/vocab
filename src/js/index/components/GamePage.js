@@ -106,6 +106,7 @@ export default class GamePage extends React.Component {
 
 		socket.on ('leaveGame', () => {
 			this.setState (reset);
+			this.setState ({ done: {} });
 			socket.emit ('createRoom', this.props.username)
 		});
 
