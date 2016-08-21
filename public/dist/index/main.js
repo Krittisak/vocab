@@ -21574,7 +21574,10 @@
 			if (username !== undefined) {
 				var code = _reactCookie2.default.load('code');
 				_superagent2.default.get('/data/' + code + '.json').end(function (err, res) {
-					if (!err) {
+					if (err) {
+						_reactCookie2.default.remove('username');
+						_reactCookie2.default.remove('vocab');
+					} else {
 						_this.onLogin(username, code, res.body);
 					}
 				});
@@ -23528,8 +23531,10 @@
 
 					_superagent2.default.get('/data/' + code + '.json').end(function (err, res) {
 						if (err) {
+							console.log(err);
 							_this2.setState({ message: 'Invalid Code' });
 						} else {
+							console.log(res.body);
 							_this2.props.onLogin(username, code, res.body);
 						}
 					});
@@ -23938,22 +23943,31 @@
 				var currentDir = this.state.currentDir;
 
 				var wordLists = vocab;
-
+				var wordPage = false;
 				currentDir.forEach(function (data) {
-					wordLists = wordLists[data];
+					wordLists = wordLists.find(function (obj) {
+						return obj['title'] === data;
+					});
+
+					if (wordLists['data'] !== undefined) {
+						wordLists = wordLists['data'];
+					} else {
+						wordLists = wordLists['words'];
+						wordPage = true;
+					}
 				});
 
 				var renderPage;
-				if (wordLists instanceof Array) {
+				if (wordPage) {
 					renderPage = _react2.default.createElement(_WordPage2.default, { wordLists: wordLists });
 				} else {
-					var temp = Object.keys(wordLists);
 					var menu = [];
-					temp.forEach(function (data) {
+					wordLists.forEach(function (data) {
+						var title = data['title'];
 						menu.push(_react2.default.createElement(
 							'button',
-							{ key: data, className: 'button', value: data, onTouchTap: _this2.onPress },
-							data
+							{ key: title, className: 'button', value: title, onTouchTap: _this2.onPress },
+							title
 						));
 					});
 					renderPage = _react2.default.createElement(
@@ -34353,13 +34367,22 @@
 				var currentDir = this.state.currentDir;
 
 				var wordLists = vocab;
-
+				var wordPage = false;
 				currentDir.forEach(function (data) {
-					wordLists = wordLists[data];
+					wordLists = wordLists.find(function (obj) {
+						return obj['title'] === data;
+					});
+
+					if (wordLists['data'] !== undefined) {
+						wordLists = wordLists['data'];
+					} else {
+						wordLists = wordLists['words'];
+						wordPage = true;
+					}
 				});
 
 				var renderPage;
-				if (wordLists instanceof Array) {
+				if (wordPage) {
 					renderPage = _react2.default.createElement(_ListPage2.default, {
 						wordLists: wordLists,
 						onSend: this.props.onSend,
@@ -34367,13 +34390,13 @@
 						onDone: this.props.onDone
 					});
 				} else {
-					var temp = Object.keys(wordLists);
 					var menu = [];
-					temp.forEach(function (data) {
+					wordLists.forEach(function (data) {
+						var title = data['title'];
 						menu.push(_react2.default.createElement(
 							'button',
-							{ key: data, className: 'button', value: data, onTouchTap: _this2.onPress },
-							data
+							{ key: title, className: 'button', value: title, onTouchTap: _this2.onPress },
+							title
 						));
 					});
 					renderPage = _react2.default.createElement(

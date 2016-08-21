@@ -27,7 +27,10 @@ export default class App extends React.Component {
 			request
 				.get ('/data/' + code + '.json')
 				.end ((err, res) => {
-					if (!err) {
+					if (err) {
+					  cookie.remove ('username');
+						cookie.remove ('vocab');
+					} else {
 						this.onLogin (username, code, res.body);
 					}
 				});

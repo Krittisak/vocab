@@ -18,8 +18,10 @@ export default class LoginPage extends React.Component {
 				.get ('/data/' + code + '.json')
 				.end ((err, res) => {
 					if (err) {
+						console.log (err);
 						this.setState ({ message: 'Invalid Code' });
 					} else {
+						console.log (res.body);
 						this.props.onLogin (username, code, res.body);
 					}
 				});

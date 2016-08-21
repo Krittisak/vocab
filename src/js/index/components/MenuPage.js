@@ -36,13 +36,22 @@ export default class MenuPage extends React.Component {
 		var { mode, vocab } = this.props;
 		var { currentDir } = this.state;
 		var wordLists = vocab;
-
+		var wordPage = false;
 		currentDir.forEach (data => {
-			wordLists = wordLists[data];
+			wordLists = wordLists.find ((obj) => {
+				return obj['title'] === data;
+			});
+
+			if (wordLists['data'] !== undefined) {
+				wordLists = wordLists['data'];
+			} else {
+				wordLists = wordLists['words'];
+				wordPage = true;
+			}
 		});
 
 		var renderPage;
-		if (wordLists instanceof Array) {
+		if (wordPage) {
 			renderPage =
 				<ListPage
 					wordLists={ wordLists }
@@ -51,11 +60,11 @@ export default class MenuPage extends React.Component {
 					onDone={ this.props.onDone }
 				/>;
 		} else {
-			var temp = Object.keys (wordLists);
 			var menu = [];
-			temp.forEach (data => {
+			wordLists.forEach (data => {
+				var title = data['title'];
 				menu.push (
-					<button key={ data } className="button" value={ data } onTouchTap={ this.onPress }>{ data }</button>
+					<button key={ title } className="button" value={ title } onTouchTap={ this.onPress }>{ title }</button>
 				);
 			});
 			renderPage = <div className="listPage"><div className="selectPage">{ menu }</div></div>;
