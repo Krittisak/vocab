@@ -96,7 +96,7 @@
       { "p": "complex,complicated", "s": "สลับซับซ้อน" },
       { "p": "component,constituent", "s": "องค์ประกอบ" },
       { "p": "composed of,constitute", "s": "ประกอบด้วย" },
-      { "p": "concentrate,focus", "s": "มีจิตใจจดจ่ออยุกับ,เน้น" },
+      { "p": "concentrate,focus", "s": "มีจิตใจจดจ่ออยุ่กับ,เน้น" },
       { "p": "conclude,infer", "s": "สรุป" },
       { "p": "condolence,sympathy", "s": "การแสดงความเสียใจ" },
       { "p": "conference,convention", "s": "การประชุม" },
@@ -2181,7 +2181,7 @@
       { "p": "consist of,contain (v)", "s": "ประกอบด้วย" }
     ],
     "Set 19": [
-      { "p": "", "s": "้hinder,impede (v) ขัดขวาง" },
+      { "p": "hinder,impede (v)", "s": "ขัดขวาง" },
       { "p": "mutual,shared (adj)", "s": "ร่วมกัน" },
       { "p": "decline,deterioration ( n )", "s": "ความเสื่อม" },
       { "p": "average,mean (adj)", "s": "โดยเฉลี่ย" },
